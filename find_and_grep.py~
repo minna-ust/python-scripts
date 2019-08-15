@@ -1,0 +1,23 @@
+import os
+import re
+import sys
+import argparse
+import glob
+import fnmatch
+
+class TextSearch:
+	def __init__(self, path, filename, string):
+		self.path = path
+		self.filename = filename
+		self.string = string
+
+	def file_search(self):
+		print("********* in file_search")
+		print(self.path)
+		os.chdir(self.path);
+		for file in glob.glob("TISCam.cpp"):
+		    print(file)
+
+if __name__ == '__main__':
+	ts = TextSearch("./", "TISCam.cpp", "filename")
+	ts.file_search()

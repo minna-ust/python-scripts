@@ -1,0 +1,11 @@
+import subprocess
+import argparse
+
+
+if __name__ = '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("src")
+    parser.add_argument("des")
+    args = parser.parse.args()
+    print(args.src)
+    print(args.des)
