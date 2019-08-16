@@ -1,0 +1,122 @@
+import os
+import re
+import sys
+import argparse
+import glob
+import fnmatch
+import subprocess
+from pprint import pprint
+
+class Process:
+    def __init__(self, filename, csvFileName):
+        self.filename = filename
+        self.csvFileName = csvFileName
+        self.word_dict = dict()
+        self.word_dict["_angle_ST_SC.csv"] = "side truck and side cargotainer"
+        self.word_dict["_angle_ST_XY.csv"] = "side truck and xy plane"
+        self.word_dict["_angle_ST_XZ.csv"] = "side truck and xz plane"
+        self.word_dict["_angle_ST_YZ.csv"] = "side truck and yz plane"
+
+        self.word_dict["_angle_SC_XY.csv"] = "side cargotainer and xy plane"
+        self.word_dict["_angle_SC_XZ.csv"] = "side cargotainer and xz plane"
+        self.word_dict["_angle_SC_YZ.csv"] = "side cargotainer and yz plane"
+
+        self.word_dict["_inliers.csv"] = "Model inliers: "
+
+    def process(self):
+        print("************ process file", self.filename)
+        csvfilename = os.path.splitext(self.filename)[0] + self.csvFileName
+        csvfile = open(csvfilename, 'w')
+
+        print(self.word_dict[self.csvFileName])
+
+        cmd = ['grep', '-rn']
+        cmd.append((self.word_dict[self.csvFileName]))
+        # cmd.append('"')
+        cmd.append(self.filename)
+        print("cmd: ", cmd)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        for line in p.stdout:
+            sys.stdout.write(line)
+            csvfile.write(line)
+        p.kill()
+
+
+        # if (self.csvFileName == "_angle_ST_SC.csv"):
+        #     cmd = ['grep', '-rn']
+        #     cmd.append((self.word_dict[self.csvFileName]))
+        #     # cmd.append('"')
+        #     cmd.append(self.filename)
+        #     print("cmd: ", cmd)
+        #     p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+        # if (self.csvFileName == "_angle_ST_XY.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side truck and xy plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+
+
+        # if (self.csvFileName == "_angle_ST_XZ.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side truck and xz plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+        # if (self.csvFileName == "_angle_ST_YZ.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side truck and yz plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+        # if (self.csvFileName == "_angle_SC_XY.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side cargotainer and xy plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+        # if (self.csvFileName == "_angle_SC_XZ.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side cargotainer and xz plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+        # if (self.csvFileName == "_angle_SC_YZ.csv"):
+        #     p = subprocess.Popen('exec grep -rn "side cargotainer and yz plane" %s' % self.filename, stdout=subprocess.PIPE, shell=True)
+        #     for line in p.stdout:
+        #         sys.stdout.write(line)
+        #         csvfile.write(line)
+        #     p.kill()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file")
+    args = parser.parse_args()
+    print(args.file)
+
+    stsc = Process(args.file, "_angle_ST_SC.csv")
+    stsc.process()
+
+    stxy = Process(args.file, "_angle_ST_XY.csv")
+    stxy.process()
+
+    stxz = Process(args.file, "_angle_ST_XZ.csv")
+    stxz.process()
+
+    scxy = Process(args.file, "_angle_SC_XY.csv")
+    scxy.process()
+
+    scxz = Process(args.file, "_angle_SC_XZ.csv")
+    scxz.process()
+
+    inlier = Process(args.file, "_inliers.csv")
+    inlier.process()
